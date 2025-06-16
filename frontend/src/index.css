@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-mindaro: #cbe896ff;
+  --color-baby: #fffffcff;
+  --color-khaki: #beb7a4ff;
+  --color-orange: #ff7f11ff;
+  --color-red: #ff1b1cff;
+}
