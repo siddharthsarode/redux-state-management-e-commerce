@@ -1,39 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { useGetProductsQuery } from "../../store/services/api";
+import { toast } from "react-toastify";
+import {
+  useDeleteProductMutation,
+  useGetProductsQuery,
+  useUpdateProductMutation,
+} from "../../store/services/api";
 import TableSkeleton from "../shared/TableSkeleton";
 import { tableTheme } from "../../helper/tableTheme";
 ModuleRegistry.registerModules([AllCommunityModule]);
 const ProductTable = () => {
   const { data: products, isError, isLoading } = useGetProductsQuery();
+  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
   console.log(products);
 
-  const rowData = [
-    {
-      id: "YR9znF6Ji021q5QMlt1CX",
-      title: "Mens Casual Premium Slim Fit T-Shirts",
-      price: "300",
-      category: "men's clothing",
-      image:
-        "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-      rating: {
-        rate: "5",
-        count: "100",
-      },
-      count: "100",
-      description:
-        "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, lightweight & soft fabric for breathable and comfortable wearing.",
-    },
-  ];
+  // below line write because  redux query return a readOnly state we cannot be mutate that state. I have need to mutate rowData
+  const rowData = products?.map((product) => ({ ...product }));
 
   const columnDefs = [
-    { headerName: "ID", field: "id", flex: 1, pinned: "left", width: 70 },
-    { headerName: "Title", field: "title", flex: 1 },
-    { headerName: "Price", field: "price", flex: 0.5 },
-    { headerName: "Category", field: "category", flex: 0.8 },
+    {
+      headerName: "ID",
+      field: "id",
+      valueGetter: (param) => param.node.rowIndex + 1,
+      width: 70,
+    },
+    { headerName: "Title", field: "title", width: 200 },
+    { headerName: "Price", field: "price", width: 100 },
+    { headerName: "Category", field: "category", width: 150 },
     {
       headerName: "Image",
+      width: 100,
       field: "image",
       cellRenderer: (params) => (
         <img
@@ -42,30 +40,55 @@ const ProductTable = () => {
           className="w-16 h-16 object-contain mx-auto"
         />
       ),
-      flex: 0.6,
     },
     {
       headerName: "Rating",
+      width: 120,
       valueGetter: (params) => `${params.data.rating.rate} ⭐`,
-      flex: 0.5,
     },
     {
       headerName: "Description",
       field: "description",
-      flex: 1.5,
+      width: 250,
+    },
+    {
+      headerName: "Actions",
+      pinned: "right",
+      width: 150,
+      editable: false,
+      filter: false,
+      cellRenderer: (param) => (
+        <button
+          onClick={() => deleteProduct(param.data.id)}
+          className="bg-red px-5 w-fit h-fit text-white cursor-pointer"
+        >
+          Delete
+        </button>
+      ),
     },
   ];
+
+  const handleProductUpdate = async (param) => {
+    try {
+      await updateProduct(param.data).unwrap();
+      toast.success("Product updated");
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   return (
     <>
       {isLoading ? (
         <TableSkeleton />
       ) : (
-        <div style={{ height: 500 }}>
+        <div className="h-[70vh]">
           <AgGridReact
             theme={tableTheme()}
-            rowData={products}
+            rowData={rowData}
             columnDefs={columnDefs}
+            defaultColDef={{ editable: true }}
+            onCellEditingStopped={handleProductUpdate}
           />
         </div>
       )}

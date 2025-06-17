@@ -21,7 +21,58 @@ export const api = createApi({
       }),
       invalidatesTags: ["products"],
     }),
+
+    updateProduct: builder.mutation({
+      query: (data) => ({
+        url: `/products/${data.id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["products"],
+      async onQueryStarted(data, { dispatch, queryFulfilled }) {
+        const dispatchResult = dispatch(
+          api.util.updateQueryData("getProducts", undefined, (products) => {
+            const productIndex = products.findIndex((p) => data.id == p.id);
+            console.log(productIndex);
+            products[productIndex] = { ...products[productIndex], ...data };
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          dispatchResult.undo();
+        }
+      },
+    }),
+
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["products"],
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const dispatchResult = dispatch(
+          api.util.updateQueryData("getProducts", undefined, (products) => {
+            const productIndex = products.findIndex((p) => id == p.id);
+            products.splice(productIndex, 1);
+          })
+        );
+
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          dispatchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useAddProductMutation } = api;
+export const {
+  useGetProductsQuery,
+  useAddProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} = api;
