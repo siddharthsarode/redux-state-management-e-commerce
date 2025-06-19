@@ -86,28 +86,39 @@
       "email": "siddharthsarode279@gmail.com",
       "password": "123456",
       "isAdmin": true
+    },
+    {
+      "id": "nc0fs_os4Um0YorI1GIAH",
+      "name": "Ram",
+      "email": "ram@gmail.com",
+      "password": "123456",
+      "isAdmin": false
     }
   ],
-  "cart": [
+  "carts": [
     {
-      "id": "1",
-      "userId": 1,
-      "date": "2020-03-02T00:00:00.000Z",
-      "products": [
-        {
-          "productId": 1,
-          "quantity": 4
-        },
-        {
-          "productId": 2,
-          "quantity": 1
-        },
-        {
-          "productId": 3,
-          "quantity": 6
-        }
-      ],
-      "__v": 0
+      "id": "oEQstLn6ba4LY15vUELst",
+      "userId": "nc0fs_os4Um0YorI1GIAH",
+      "productId": "NYsbb1P5XpC12Z42gQdNK",
+      "quantity": 1
+    },
+    {
+      "id": "lL6ZMzdm2NnohEhtyEcqk",
+      "userId": "nc0fs_os4Um0YorI1GIAH",
+      "productId": "dibdGqlDszolABIxDqlvC",
+      "quantity": 1
+    },
+    {
+      "id": "RYeIkGsH-sBSa8SG8z_Y1",
+      "userId": "nc0fs_os4Um0YorI1GIAH",
+      "productId": "Zn7gkaWnbt8lO9ZxGFbZX",
+      "quantity": 1
+    },
+    {
+      "id": "1aAyrfWU8lpA3Ehevr_1B",
+      "userId": "nc0fs_os4Um0YorI1GIAH",
+      "productId": "OVmOnlNvx3Us_JrZOl_D5",
+      "quantity": 1
     }
   ]
 }

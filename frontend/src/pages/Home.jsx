@@ -4,7 +4,7 @@ import ProductsList from "../components/ProductsList";
 
 const Home = () => {
   const products = useGetProductsQuery();
-  console.log(products);
+  // console.log(products);
   return (
     <>
       <ProductsList />

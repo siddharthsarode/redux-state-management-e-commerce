@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/userSlice";
+import { useGetCartsByUserQuery } from "../../store/services/api";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +12,11 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.data);
-  console.log("User data in Navbar:", user);
+  const { data: cartItems } = useGetCartsByUserQuery(user.id);
+  // console.log("User data in Navbar:", user);
 
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Products", href: "/products" },
     { name: "About", href: "/about" },
     { name: "Contact", href: "/contact" },
     // { name: "Login", href: "/login" },
@@ -53,11 +54,11 @@ const Navbar = () => {
 
         {/* Cart Button */}
 
-        <Link to="/cart" className="text-red text-xl relative">
+        <Link to="/carts" className="text-red text-xl relative">
           <FaShoppingCart />
           {/* Optional: Badge */}
           <span className="absolute -top-2 -right-2 bg-mindaro text-xs text-black rounded-full w-5 h-5 flex items-center justify-center">
-            3
+            {cartItems?.length}
           </span>
         </Link>
 

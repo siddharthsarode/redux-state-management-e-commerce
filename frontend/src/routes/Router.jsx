@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-import Products from "../pages/Products";
 import Login from "../pages/Login";
 import RegisterForm from "../pages/Register";
 import PublicRoute from "./PublicRoute";
@@ -12,13 +11,23 @@ import AdminRoute from "./AdminRoute";
 import AddProductForm from "../components/admin/AddProduct";
 import ProductCRUD from "../components/admin/ProductCRUD";
 import ProductTable from "../components/admin/ProductTable";
+import Carts from "../pages/Carts";
+import AuthRoute from "./Auth";
 
 const Router = () => {
   return (
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
-        <Route path="/products" element={<Products />} />
+        <Route
+          path="carts"
+          element={
+            <AuthRoute>
+              <Carts />
+            </AuthRoute>
+          }
+        />
+
         <Route
           path="/login"
           element={

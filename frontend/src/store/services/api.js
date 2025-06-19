@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-  tagTypes: ["products"],
+  tagTypes: ["products", "carts"],
   endpoints: (builder) => ({
     // Product api
     getProducts: builder.query({
@@ -67,6 +67,70 @@ export const api = createApi({
         }
       },
     }),
+
+    // Carts api start from here
+    getAllCarts: builder.query({
+      query: () => "/carts",
+      providesTags: ["carts"],
+      transformResponse: (carts) => carts.reverse(),
+    }),
+
+    // Get all carts by user
+    getCartsByUser: builder.query({
+      query: (userId) => `/carts?userId=${userId}`,
+      providesTags: ["carts"],
+    }),
+
+    // add to cart
+    addToCart: builder.mutation({
+      query: (data) => ({
+        url: "/carts",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["carts"],
+    }),
+
+    updateCartItem: builder.mutation({
+      query: ({ id, quantity }) => ({
+        url: `/carts/${id}`,
+        method: "PATCH",
+        body: { quantity },
+      }),
+      // optimistic update
+      async onQueryStarted(
+        { id, quantity },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const patchResult = dispatch(
+          api.util.updateQueryData(
+            "getCartsByUser",
+            getState().user.data.id,
+            (draft) => {
+              const item = draft.find((d) => d.id === id);
+              if (item) {
+                item.quantity = quantity;
+              }
+            }
+          )
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+      invalidatesTags: ["carts"],
+    }),
+
+    deleteCartItem: builder.mutation({
+      query: (id) => ({
+        url: `/carts/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["carts"],
+    }),
   }),
 });
 
@@ -75,4 +139,9 @@ export const {
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetAllCartsQuery,
+  useAddToCartMutation,
+  useGetCartsByUserQuery,
+  useUpdateCartItemMutation,
+  useDeleteCartItemMutation,
 } = api;

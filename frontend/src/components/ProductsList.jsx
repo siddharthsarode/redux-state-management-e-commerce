@@ -1,9 +1,49 @@
 import React from "react";
-import { useGetProductsQuery } from "../store/services/api";
+import {
+  useAddToCartMutation,
+  useGetCartsByUserQuery,
+  useGetProductsQuery,
+  useUpdateCartItemMutation,
+} from "../store/services/api";
 import ProductCardSkeleton from "./shared/ProductCardSkeleton";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { nanoid } from "@reduxjs/toolkit";
 
 const ProductsList = () => {
+  const { id: userId } = useSelector((state) => state.user.data);
+
   const { data: products, isLoading, error } = useGetProductsQuery();
+  const { data: cartItems } = useGetCartsByUserQuery(userId);
+  const [addToCart] = useAddToCartMutation();
+  const [updateCartItem] = useUpdateCartItemMutation();
+
+  console.log("Cart Item", cartItems);
+
+  // Add to carts
+  const handleAddToCart = async (product) => {
+    const existingItem = cartItems?.find(
+      (cart) => cart.productId === product.id
+    );
+
+    try {
+      if (!existingItem)
+        await addToCart({
+          id: nanoid(),
+          userId,
+          productId: product.id,
+          quantity: 1,
+        });
+      else
+        await updateCartItem({
+          id: existingItem.id,
+          quantity: existingItem.quantity + 1,
+        });
+    } catch (err) {
+      toast.error(err.message || "something went wrong");
+    }
+  };
+
   return (
     <div className="bg-baby py-10 px-4 md:px-10">
       <div className="max-w-7xl mx-auto px-4 py-3">
@@ -45,7 +85,10 @@ const ProductsList = () => {
                   </span>
                 </div>
                 <div className="flex space-x-3">
-                  <button className="bg-orange text-white px-4 py-2 rounded hover:bg-red transition">
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="bg-orange text-white px-4 py-2 rounded hover:bg-red transition"
+                  >
                     Add to Cart
                   </button>
                   <button className="border border-orange text-orange px-4 py-2 rounded hover:bg-orange hover:text-white transition">
