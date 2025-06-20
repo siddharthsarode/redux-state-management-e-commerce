@@ -11,10 +11,11 @@ import { toast } from "react-toastify";
 import { nanoid } from "@reduxjs/toolkit";
 
 const ProductsList = () => {
-  const { id: userId } = useSelector((state) => state.user.data);
+  // const { id: userId } = useSelector((state) => state.user.data);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const { data: products, isLoading, error } = useGetProductsQuery();
-  const { data: cartItems } = useGetCartsByUserQuery(userId);
+  const { data: cartItems } = useGetCartsByUserQuery(user?.id);
   const [addToCart] = useAddToCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
 
@@ -30,7 +31,7 @@ const ProductsList = () => {
       if (!existingItem)
         await addToCart({
           id: nanoid(),
-          userId,
+          userId: user.id,
           productId: product.id,
           quantity: 1,
         });
@@ -40,7 +41,7 @@ const ProductsList = () => {
           quantity: existingItem.quantity + 1,
         });
     } catch (err) {
-      toast.error(err.message || "something went wrong");
+      toast.error("You must be login first");
     }
   };
 

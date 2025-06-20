@@ -1,11 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
 import { FaTachometerAlt, FaUsers, FaCog } from "react-icons/fa";
+import { MdHome, MdProductionQuantityLimits } from "react-icons/md";
 
 const navItems = [
   { name: "Dashboard", path: "/admin", icon: <FaTachometerAlt /> },
-  { name: "Users", path: "/admin/users", icon: <FaUsers /> },
-  { name: "Settings", path: "/admin/settings", icon: <FaCog /> },
-  { name: "Products", path: "/admin/products", icon: <FaCog /> },
+  {
+    name: "Products",
+    path: "/admin/products",
+    icon: <MdProductionQuantityLimits />,
+  },
+  {
+    name: "Go To Home",
+    path: "/",
+    icon: <MdHome />,
+  },
 ];
 
 export default function Sidebar({ toggleMobile }) {

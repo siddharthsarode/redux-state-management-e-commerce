@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.data);
-  const { data: cartItems } = useGetCartsByUserQuery(user.id);
+  const { data: cartItems } = useGetCartsByUserQuery(user?.id);
   // console.log("User data in Navbar:", user);
 
   const navLinks = [

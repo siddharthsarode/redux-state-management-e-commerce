@@ -88,7 +88,7 @@ const ProductTable = () => {
             rowData={rowData}
             columnDefs={columnDefs}
             defaultColDef={{ editable: true }}
-            onCellEditingStopped={handleProductUpdate}
+            onCellValueChanged={handleProductUpdate}
           />
         </div>
       )}

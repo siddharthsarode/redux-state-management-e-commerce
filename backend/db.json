@@ -55,7 +55,7 @@
     {
       "id": "dibdGqlDszolABIxDqlvC",
       "title": "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
-      "price": "4500",
+      "price": "100",
       "category": "jewelery",
       "rating": {
         "rate": "5",
@@ -66,17 +66,17 @@
       "image": "https://fakestoreapi.com/img/71pWzhdJNwL._AC_UL640_QL65_ML3_.jpg"
     },
     {
-      "id": "NYsbb1P5XpC12Z42gQdNK",
-      "title": "Solid Gold Petite Micropave",
-      "price": "450",
-      "category": "jewelery",
+      "id": "g8hl7J1iWklVa89dluPSZ",
+      "title": "Heeloo",
+      "price": "333",
+      "category": "electronics",
+      "image": "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
       "rating": {
-        "rate": "3.2",
-        "count": "20"
+        "rate": "4",
+        "count": "50"
       },
-      "count": "20",
-      "description": "Satisfaction Guaranteed. Return or exchange any order within 30 days.Designed and sold by Hafeez Center in the United States. Satisfaction Guaranteed. Return or exchange any order within 30 days.\",\n    \"category\": \"jewelery",
-      "image": "https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL640_QL65_ML3_.jpg"
+      "count": "50",
+      "description": "Nice product"
     }
   ],
   "users": [
@@ -93,14 +93,21 @@
       "email": "ram@gmail.com",
       "password": "123456",
       "isAdmin": false
+    },
+    {
+      "id": "57T0Br4GV5f-S2uDIhB5z",
+      "name": "Raju",
+      "email": "raju@gmail.com",
+      "password": "123456",
+      "isAdmin": false
     }
   ],
   "carts": [
     {
       "id": "oEQstLn6ba4LY15vUELst",
       "userId": "nc0fs_os4Um0YorI1GIAH",
-      "productId": "NYsbb1P5XpC12Z42gQdNK",
-      "quantity": 1
+      "productId": null,
+      "quantity": 4
     },
     {
       "id": "lL6ZMzdm2NnohEhtyEcqk",
@@ -119,6 +126,18 @@
       "userId": "nc0fs_os4Um0YorI1GIAH",
       "productId": "OVmOnlNvx3Us_JrZOl_D5",
       "quantity": 1
+    },
+    {
+      "id": "HH4NhM59NkiVMjF-AV-uA",
+      "userId": "57T0Br4GV5f-S2uDIhB5z",
+      "productId": null,
+      "quantity": 4
+    },
+    {
+      "id": "LHHzm0haZq7w0jkW0lRv8",
+      "userId": "b4bKbAHP1cMptYG-ikkQ_",
+      "productId": "g8hl7J1iWklVa89dluPSZ",
+      "quantity": 3
     }
   ]
 }
