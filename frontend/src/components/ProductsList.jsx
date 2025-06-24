@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useAddToCartMutation,
   useGetCartsByUserQuery,
@@ -6,42 +5,65 @@ import {
   useUpdateCartItemMutation,
 } from "../store/services/api";
 import ProductCardSkeleton from "./shared/ProductCardSkeleton";
-import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { nanoid } from "@reduxjs/toolkit";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+const LIMIT = 3;
 
 const ProductsList = () => {
-  // const { id: userId } = useSelector((state) => state.user.data);
   const user = JSON.parse(localStorage.getItem("user"));
-
-  const { data: products, isLoading, error } = useGetProductsQuery();
   const { data: cartItems } = useGetCartsByUserQuery(user?.id);
   const [addToCart] = useAddToCartMutation();
   const [updateCartItem] = useUpdateCartItemMutation();
 
-  console.log("Cart Item", cartItems);
+  // Pagination state
+  const [start, setStart] = useState(0);
+  const [productsData, setProductsData] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
 
-  // Add to carts
+  const {
+    data: products,
+    isFetching,
+    error,
+  } = useGetProductsQuery({ start, limit: LIMIT });
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      setProductsData((prev) => [...prev, ...products]);
+    } else if (products?.length === 0) {
+      setHasMore(false); // no more products
+    }
+  }, [products]);
+
+  const fetchNextProducts = () => {
+    if (!isFetching && hasMore) {
+      setStart((prev) => prev + LIMIT);
+    }
+  };
+
   const handleAddToCart = async (product) => {
     const existingItem = cartItems?.find(
       (cart) => cart.productId === product.id
     );
 
     try {
-      if (!existingItem)
+      if (!existingItem) {
         await addToCart({
           id: nanoid(),
           userId: user.id,
           productId: product.id,
           quantity: 1,
         });
-      else
+      } else {
         await updateCartItem({
           id: existingItem.id,
           quantity: existingItem.quantity + 1,
         });
+      }
     } catch (err) {
-      toast.error("You must be login first");
+      toast.error("You must be logged in first");
     }
   };
 
@@ -52,13 +74,24 @@ const ProductsList = () => {
           Our Products
         </h2>
 
-        {isLoading ? (
-          <ProductCardSkeleton />
-        ) : error ? (
-          <p className="text-center text-2xl">No product Found!</p>
-        ) : (
+        {start === 0 && isFetching && <ProductCardSkeleton />}
+        {error && (
+          <p className="text-center text-2xl">Failed to load products!</p>
+        )}
+
+        <InfiniteScroll
+          dataLength={productsData.length}
+          next={fetchNextProducts}
+          hasMore={hasMore}
+          loader={<ProductCardSkeleton />}
+          endMessage={
+            <p className="text-center text-gray-600 mt-6">
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products?.map((product) => (
+            {productsData.map((product) => (
               <div
                 key={product.id}
                 className="bg-white shadow-md rounded-xl p-5 hover:shadow-lg transition"
@@ -99,7 +132,7 @@ const ProductsList = () => {
               </div>
             ))}
           </div>
-        )}
+        </InfiniteScroll>
       </div>
     </div>
   );

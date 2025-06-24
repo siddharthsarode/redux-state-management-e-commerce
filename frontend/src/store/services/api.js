@@ -8,7 +8,11 @@ export const api = createApi({
   endpoints: (builder) => ({
     // Product api
     getProducts: builder.query({
-      query: () => "/products",
+      query: (params) => {
+        return `/products?_start=${params.start || 0}&_limit=${
+          params.limit || 6
+        }`;
+      },
       providesTags: ["products"],
       transformResponse: (products) => products.reverse(),
     }),
